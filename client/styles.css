@@ -124,3 +124,42 @@ h2 {
   display: flex;
   justify-content: space-evenly;
 }
+
+/* Game */
+
+.game-container {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.game-sidebar {
+  flex: 0;
+  width: 200px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.game-board {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.fighter-area {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.hand {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
