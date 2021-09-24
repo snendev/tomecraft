@@ -1,0 +1,18 @@
+{
+  "imports": {
+    "~/": "./",
+
+    "firebase": "https://cdn.skypack.dev/firebase@8.7.0/app",
+    "firebase/auth": "https://cdn.skypack.dev/firebase@8.7.0/auth",
+    "firebase/firestore": "https://cdn.skypack.dev/firebase@8.7.0/firestore",
+    "http": "https://deno.land/std@0.105.0/http/mod.ts",
+    "media-types": "https://deno.land/x/media_types@v2.10.0/mod.ts",
+    "oak": "https://deno.land/x/oak@v9.0.1/mod.ts",
+    "react": "https://cdn.esm.sh/react@17",
+    "react-dom": "https://cdn.esm.sh/react-dom@17",
+    "react-dom/": "https://cdn.esm.sh/react-dom@17/",
+    "react-google-button": "https://cdn.esm.sh/react-google-button@0.7.2?deps=react@17",
+    "react-use-websocket": "https://cdn.esm.sh/react-use-websocket@2.7?deps=react@17"
+  },
+  "scopes": {}
+}
