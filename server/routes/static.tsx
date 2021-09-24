@@ -57,7 +57,6 @@ const html = `
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      ${ /* ReactDOMServer.renderToString(<App />) */ '' }
     </div>
     <script src="/bundle.js"></script>
   </body>
@@ -72,14 +71,6 @@ staticRouter
   .get('/', (ctx) => {
     ctx.response.body = html
   })
-  // // serve wasm file
-  // .get('/wasm.wasm', async (ctx) => {
-  //   const headers = new Headers(ctx.response.headers)
-  //   headers.set('Content-Type', 'application/wasm')
-  //   ctx.response.headers = headers
-  //   const body = await Deno.readFile('common/wasm/wasm_bg.wasm')
-  //   ctx.response.body = body
-  // })
   .get('/styles.css', (ctx) => {
     const styles = Deno.readTextFileSync('client/styles.css')
     const contentTypeValue = contentType('styles.css')

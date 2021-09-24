@@ -1,14 +1,13 @@
 import React from 'react'
 
-import Page from '../components/Page.tsx'
+import IntroPage from '../components/IntroPage.tsx'
 
 export default function AppPage() {
   return (
-    <Page>
+    <IntroPage>
       <div>
         <p>Hello world!</p>
-        <img style={{width: 100, height: 100}} src="/assets/example.png" />
       </div>
-    </Page>
+    </IntroPage>
   )
 }

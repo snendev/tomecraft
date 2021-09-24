@@ -10,9 +10,9 @@ export default function Page({children}: PageProps): JSX.Element {
   return (
     <div className="page">
       <header className="header">
-        <span className="header-text">
-          Deno Web Starter
-        </span>
+        <h2 className="header-text">
+          Tomecraft
+        </h2>
         <a
           href="https://github.com/sullivansean27/deno-react-web-starter"
           target="_blank"

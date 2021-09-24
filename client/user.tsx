@@ -2,13 +2,12 @@ import React from 'react';
 
 import type { UserProfile } from '~/common/user.ts'
 
-// import { subscribeToAuthState } from './api/auth.ts'
+import { subscribeToAuthState } from './api/auth.ts'
 
 type AuthState =
   | {loginState: 'pending'}
   | {loginState: 'logged-out'}
-  // | {loginState: 'logged-in'; userId: string; profile: UserProfile}
-  | {loginState: 'logged-in'; profile: {}}
+  | {loginState: 'logged-in'; profile: UserProfile}
 type UserHandle = AuthState
 
 const AuthContext = React.createContext<UserHandle | null>(null)
@@ -20,7 +19,7 @@ export function useAuth(): UserHandle {
 }
 
 // TODO: UPDATE HERE TO ENABLE AUTH
-const initialAuthState: AuthState = {loginState: 'logged-in', profile: {}}
+const initialAuthState: AuthState = {loginState: 'pending'}
 
 interface AuthProviderProps {
   children: React.ReactNode
@@ -38,12 +37,15 @@ export function AuthProvider({children}: AuthProviderProps): JSX.Element {
   const [authState, setAuthState] = React.useState<AuthState>(initialAuthState)
 
   React.useEffect(() => {
-    // subscribeToAuthState((user) => {
-    //   if (user) {
-    //     setAuthState({ loginState: 'logged-in'})
-    //   }
-    //   else setAuthState({ loginState: 'logged-out' })
-    // })
+    subscribeToAuthState((user) => {
+      if (user) {
+        setAuthState({
+          loginState: 'logged-in',
+          profile: {displayName: user.displayName.split(' ')[0]},
+        })
+      }
+      else setAuthState({ loginState: 'logged-out' })
+    })
   }, [])
 
   return (
@@ -62,7 +64,7 @@ export function useUser(): UserProfile {
 }
 
 interface UserProviderProps {
-  profile: {}
+  profile: UserProfile
   children: React.ReactNode
 }
 

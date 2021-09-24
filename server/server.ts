@@ -40,12 +40,6 @@ app.use((context) => {
   context.response.body = `"${context.request.url}" not found`
 })
 
-//// init wasm file here
-//// https://deno.com/deploy/docs/serve-static-assets
-// const WASM_PATH = new URL('../common/wasm/wasm_bg.wasm', import.meta.url)
-//// https://github.com/rustwasm/wasm-pack/issues/672#issuecomment-813630435
-// await init(Deno.readFile(WASM_PATH))
-
 const port = +(Deno.env.get('PORT') ?? 8080)
 console.log(`Listening on port ${port}...`)
 app.listen(`:${port}`)

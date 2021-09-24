@@ -1,9 +1,99 @@
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
 .page {
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
+
+  font-family: sans-serif;
+
+  background-color: #ad9885;
 }
+
+/* Login and Intro pages */
+
+.vertical-ribbon {
+  position: absolute;
+  right: 30%;
+  top: 0;
+  bottom: 0;
+  width: 90px;
+
+  background-color: #d1345b;
+  box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.intro-title-card-ribbon {
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 15%;
+  height: 240px;
+
+  background-color: #942911;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.intro-title-ribbon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2em;
+  bottom: 2em;
+
+  padding: 0 25%;
+
+  z-index: 1;
+  background-color: #3454d1;
+  box-shadow: 2px 8px 4px 1px rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.into-title-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.intro-title-text {
+  color: #ddf6fd;
+  margin-right: 1em;
+}
+
+.intro-main {
+  position: absolute;
+  bottom: 35%;
+  left: 30%;
+}
+
+.tassle {
+  position: absolute;
+  left: 5%;
+  top: 0;
+  z-index: 2;
+
+  width: 105px;
+  height: 415px;
+
+  object-fit: cover;
+  object-position: 0% 0%;
+  margin-top: -85px;
+  overflow: hidden;
+}
+
+/* Common pages */
 
 .header {
   height: 90px;
