@@ -98,10 +98,10 @@ h2 {
 .header {
   height: 90px;
   flex: 0 0 auto;
-  background-color: #4a6670;
+  background-color: #3454d1;
   padding-left: 2em;
   padding-right: 2em;
-  box-shadow: 0 1em 1em rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 8px 4px 1px rgba(0, 0, 0, 0.25);
 
   display: flex;
   align-items: center;
@@ -109,9 +109,8 @@ h2 {
 }
 
 .header-text {
-  font-size: 32px;
   font-family: sans-serif;
-  color: #18212b;
+  color: #ddf6fd;
 }
 
 .main {
@@ -119,7 +118,6 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e6eaef;
 }
 
 .frame {

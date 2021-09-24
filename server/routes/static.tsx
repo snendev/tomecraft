@@ -40,8 +40,8 @@ const html = `
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deno React Web Starter</title>
-    <meta name="description" content="Template for SSR React apps with Deno, Oak, and Firebase." />
+    <title>Tomecraft</title>
+    <meta name="description" content="Tactical CCG" />
     <link href="styles.css" rel="stylesheet" type="text/css">
     <style>
       body {

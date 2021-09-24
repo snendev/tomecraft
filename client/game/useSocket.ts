@@ -15,17 +15,50 @@ type AsyncHandle<T> =
   | { status: 'connecting' }
   | { status: 'connected'; handle: T}
 
-interface SocketAPI {}
+interface SessionCommandAPI {
+  query: () => void
+  join: () => void
+  leave: () => void
+  play: () => void
+  poll: () => void
+}
+
+interface GameCommandAPI {
+  act: () => void,
+  getState: () => void,
+  debug: () => void,
+}
+
+// TODO
+type GameCommandEnum = 'a' | 's' | 'd'
+
+interface SocketMessage {
+  playerId?: string
+  matchId?: string
+  command: keyof SessionCommandAPI
+  gameCommand?: {
+    playerId: string
+    type: GameCommandEnum,
+    cmd: unknown
+  }
+}
 
 type State =
   | { status: 'not-connected' }
   | { status: 'connecting' }
-  | { status: 'connected'}
+  | { status: 'finding-game' }
+  | { status: 'in-game'; playerId: string; matchId: string }
 
-type Action = 'open' | 'close' | 'error'
+type Action =
+  | { type: 'open' }
+  | { type: 'close' }
+  | { type: 'error' }
+  | { type: 'game-found'; matchId: string; playerId: string }
+
 function reducer(_state: State, action: Action): State {
-  switch (action) {
-    case 'open': return { status: 'connected' }
+  switch (action.type) {
+    case 'open': return { status: 'finding-game' }
+    case 'game-found': return { status: 'in-game', matchId: action.matchId, playerId: action.playerId }
     case 'close': return { status: 'not-connected' }
     case 'error': return { status: 'connecting' }
     default: return assertNever(action)
@@ -34,8 +67,8 @@ function reducer(_state: State, action: Action): State {
 
 const initialState: State = {status: 'not-connected'}
 
-export default function useSocket(): AsyncHandle<SocketAPI> {
-  const _user = useUser()
+export default function useSocket(): AsyncHandle<GameCommandAPI> {
+  const profile = useUser()
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
   const onMessage = React.useCallback((message: WebSocketEventMap['message']) => {
@@ -45,35 +78,52 @@ export default function useSocket(): AsyncHandle<SocketAPI> {
 
   const onOpen = React.useCallback(() => {
     console.log('socket opened')
-    dispatch('open')
+    dispatch({type: 'open'})
   }, [])
   
   const onError = React.useCallback((event: WebSocketEventMap['error']) => {
     console.error(event)
-    dispatch('error')
+    dispatch({type: 'error'})
   }, [])
   
   const onClose = React.useCallback((_event: WebSocketEventMap['close']) => {
     console.log('socket closed')
-    dispatch('close')
+    dispatch({type: 'close'})
   }, [])
 
-  const url = React.useMemo(() =>
-    `ws://${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}/api/ws?name=${name}`,
-    [],
+  const url = React.useMemo(
+    // () => `ws://arcade.saintnet.tech:7636/ws?name=${profile.displayName}`,
+    () => `ws://arcade.saintnet.tech:7636/ws`,
+    [profile],
   )
   const socket = useWebSocket(
     url,
     {onMessage, onOpen, onError, onClose, shouldReconnect},
   )
 
+  const sendJson = React.useCallback((message: SocketMessage) => {
+    socket.send(JSON.stringify(message))
+  }, [socket])
+
   const handle = React.useMemo(() => ({
-    sendJson: (value: {}) => socket.send(JSON.stringify(value)),
-  }), [socket])
+    // session commands
+    query: () => {},
+    join: () => {},
+    leave: () => {},
+    play: () => {},
+    poll: () => {},
+    // game commands
+    act: () => {},
+    getState: () => {},
+    debug: () => {},
+  }), [sendJson])
 
   switch (state.status) {
-    case 'connected': {
+    case 'in-game': {
       return {status: 'connected', handle}
+    }
+    case 'finding-game': {
+      return {status: 'connecting'}
     }
     case 'connecting':
     case 'not-connected':
