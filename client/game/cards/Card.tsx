@@ -1,28 +1,32 @@
 import React from 'react'
 
-import {CardKey, getCardSrc} from './cards.ts'
+import type {CardKey} from '../types.ts'
+
+import {getCardAlt, getCardSrc} from './cards.ts'
 
 const EMPTY_SPACE = '-'
 
 interface CardTokenProps {
   cardKey: CardKey | null
-  onClick?: () => void
+  onSelect?: () => void
 }
 
 export default function CardToken(props: CardTokenProps): JSX.Element {
-  const {onClick, cardKey} = props
+  const {onSelect, cardKey} = props
 
   if (cardKey == null) {
     return (
-      <button>
+      <div>
         <span>{EMPTY_SPACE}</span>
-      </button>
+      </div>
     )
   }
-  const card = getCardSrc(cardKey)
   return (
-    <button onClick={onClick}>
-      <img src={card} alt={cardKey} />
+    <button onClick={onSelect}>
+      <img
+        src={getCardSrc(cardKey)}
+        alt={getCardAlt(cardKey)}
+      />
     </button>
   )
 }

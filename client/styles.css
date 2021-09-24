@@ -1,3 +1,7 @@
+* {
+  font-family: sans-serif;
+}
+
 h1 {
   font-size: 3em;
 }
@@ -11,8 +15,6 @@ h2 {
   width: 100%;
   display: flex;
   flex-direction: column;
-
-  font-family: sans-serif;
 
   background-color: #ad9885;
 }
@@ -93,6 +95,17 @@ h2 {
   overflow: hidden;
 }
 
+.menu-button {
+  font-size: 2em;
+  height: 2em;
+  width: 4em;
+
+  background-color: #ffe7d1;
+  border: 0.1em solid #b85900;
+  border-radius: 0.5em;
+  box-shadow: -2px 2px 0 rgba(144, 90, 39, 0.25);
+}
+
 /* Common pages */
 
 .header {
@@ -136,12 +149,23 @@ h2 {
 }
 
 .game-sidebar {
-  flex: 0;
-  width: 200px;
+  flex: 0 0 auto;
+  width: 10em;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  text-align: center;
+
+  background: #942911;
+  color: #ddf6fd;
+}
+
+.player-info {
+  margin: 1em;
+  padding: 1em;
+  background-color: #c4c4c4;
+  color: #000000;
 }
 
 .game-board {

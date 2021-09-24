@@ -4,7 +4,7 @@ import assertNever from '~/common/assertNever.ts'
 
 import IntroPage from '../components/IntroPage.tsx'
 import Page from '../components/Page.tsx'
-import Game from '../game/Game.tsx'
+import GameClient from '../game/GameClient.tsx'
 
 type MenuState = 'menu' | 'play'
 
@@ -15,7 +15,7 @@ export default function AppPage() {
     case 'menu': {
       return (
         <IntroPage>
-          <button onClick={() => setMenuState('play')}>
+          <button className="menu-button" onClick={() => setMenuState('play')}>
             Play
           </button>
         </IntroPage>
@@ -24,7 +24,7 @@ export default function AppPage() {
     case 'play': {
       return (
         <Page>
-          <Game />
+          <GameClient />
         </Page>
       )
     }
