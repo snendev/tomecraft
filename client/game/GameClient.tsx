@@ -203,6 +203,7 @@ export default function GameClient(): JSX.Element {
   React.useEffect(() => {
     if (gameHandle.status !== 'connected') return
     gameHandle.handle.readyPlayer()
+    gameHandle.handle.readyPlayer()
   }, [gameHandle, team])
 
   switch (gameHandle.status) {
