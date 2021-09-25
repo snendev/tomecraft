@@ -73,7 +73,7 @@ export interface GameState {
 export type GameAction =
   | { type: 'set-player-team'; team: Team}
   | { type: 'receive-cards'; cards: Card[]}
-  | { type: 'update-state'; state: Omit<GameState, 'team'> }
+  | { type: 'update-state'; state: Omit<GameState, 'team' | 'drawChoices'> }
   | { type: 'play-card', handIndex: number }
 
 export interface GameCommandAPI {
