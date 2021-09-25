@@ -1,9 +1,5 @@
 import { Application, Status } from 'oak'
 
-//// import any necessary wasm file here
-// import init from '~/common/wasm.js'
-
-import apiRouter from './routes/api.ts'
 import staticRouter from './routes/static.tsx'
 
 const app = new Application()
@@ -27,9 +23,6 @@ app.use((ctx, next) => {
   console.log(ctx.request.url.pathname)
   return next()
 })
-
-app.use(apiRouter.routes())
-app.use(apiRouter.allowedMethods())
 
 app.use(staticRouter.routes())
 app.use(staticRouter.allowedMethods())

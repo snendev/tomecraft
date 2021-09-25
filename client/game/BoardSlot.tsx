@@ -8,19 +8,31 @@ const EMPTY_SPACE = '-'
 interface CardTokenProps {
   card: Card | null
   onSelect: () => void
+  isSelected: boolean
+  disabled: boolean
 }
 
 export default function BoardSlot(props: CardTokenProps): JSX.Element {
-  const {onSelect, card} = props
+  const {onSelect, card, isSelected, disabled} = props
 
-  if (card == null) {
+  if (card === null || card.type === -1) {
     return (
-      <button>
+      <button
+        type="button"
+        className={`board-slot${isSelected ? ' selected' : ''}`}
+        onClick={onSelect}
+        disabled={disabled}
+      >
         <span>{EMPTY_SPACE}</span>
       </button>
     )
   }
   return (
-    <CardToken onSelect={onSelect} cardKey={card.id} />
+    <CardToken
+      onSelect={onSelect}
+      cardKey={card.type}
+      isSelected={isSelected}
+      disabled={disabled}
+    />
   )
 }

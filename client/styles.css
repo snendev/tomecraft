@@ -1,5 +1,6 @@
 * {
   font-family: sans-serif;
+  box-sizing: border-box;
 }
 
 h1 {
@@ -151,6 +152,7 @@ h2 {
 .game-sidebar {
   flex: 0 0 auto;
   width: 10em;
+  padding: 1em;
 
   display: flex;
   flex-direction: column;
@@ -162,7 +164,6 @@ h2 {
 }
 
 .player-info {
-  margin: 1em;
   padding: 1em;
   background-color: #c4c4c4;
   color: #000000;
@@ -186,4 +187,41 @@ h2 {
   display: flex;
   justify-content: center;
   text-align: center;
+}
+
+.board-slot {
+  width: 5em;
+  height: 7em;
+  margin: 0 1em;
+}
+
+.card-button {
+  width: 10em;
+  height: 14em;
+  margin: 0 1em;
+
+  background: transparent;
+  border: none;
+}
+
+.card-button:disabled {
+  cursor: not-allowed;
+}
+
+.card-back {
+  background: grey;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7em;
+}
+
+.selected {
+  box-shadow: 0px 0px 8px 4px rgba(245, 194, 10, 0.5);
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
 }

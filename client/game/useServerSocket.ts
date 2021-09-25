@@ -75,7 +75,7 @@ function reducer(state: GameSocketSessionState, action: Action): GameSocketSessi
 const initialState: GameSocketSessionState = {status: 'connecting'}
 
 interface SocketHandle {
-  sendGameCommand: (command: Omit<GameCommand, 'playerId'>) => void
+  sendGameCommand: (command: GameCommand) => void
 }
 
 export default function useServerSocket(
@@ -98,18 +98,49 @@ export default function useServerSocket(
         return
       }
       case 'joined p1': {
-        onUpdate({ type: 'set-player', team: 1 })
-        dispatch ({type: 'join-game'})
+        onUpdate({ type: 'set-player-team', team: 1 })
+        dispatch ({ type: 'join-game' })
         return
       }
       case 'joined p2': {
-        onUpdate({ type: 'set-player', team: 2 })
-        dispatch ({type: 'join-game' })
+        onUpdate({ type: 'set-player-team', team: 2 })
+        dispatch ({ type: 'join-game' })
         return
       }
-      default: break;
+      case 'played': {
+        switch (data.game_result.result_type) {
+          case 'a': {
+            const result = data.game_result.action_result
+            if (result) onUpdate({
+              type: 'receive-cards',
+              cards: result.cards,
+            })
+            return
+          }
+          case 's': {
+            const result = data.game_result.state_result
+            if (result) onUpdate({
+              type: 'update-state',
+              state: {
+                board: result.board,
+                player: result.player,
+                deck: result.deck,
+                enemyLife: result.enemy_life,
+                enemyDeckSize: result.enemy_deck_size,
+                enemyHandSize: result.enemy_hand_size,
+                currentTurn: result.current_turn,
+                canDraw: result.can_draw,
+                hasDrawn: result.has_drawn,
+                gameStatus: result.game_status,
+              },
+            })
+            return
+          }
+          default: return
+        }
+      }
+      default: return;
     }
-    onUpdate(data)
   }, [onUpdate])
 
   const onOpen = React.useCallback(() => {
@@ -141,16 +172,13 @@ export default function useServerSocket(
     sendJsonMessage(message)
   }, [sendJsonMessage])
 
-  const sendGameCommand = React.useCallback((gameCommand: Omit<GameCommand, 'playerId'>) => {
+  const sendGameCommand = React.useCallback((gameCommand: GameCommand) => {
     if (state.status !== 'in-game') return
     sendJson({
       player_id: MY_ID,
       match_id: state.matchId,
       command: 'play',
-      game_command: {
-        ...gameCommand,
-        playerId: state.playerId,
-      },
+      game_command: gameCommand,
     })
   }, [state, sendJson])
 

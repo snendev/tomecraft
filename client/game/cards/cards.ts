@@ -2,8 +2,8 @@ import type {CardKey} from '../types.ts'
 
 const cardPaths: Record<CardKey, string> = {
   0: 'joker.png',
-  1: 'sp_2.png',
-  2: 'sp_14.png',
+  1: 'sp_14.png',
+  2: 'sp_2.png',
   3: 'sp_3.png',
   4: 'sp_4.png',
   5: 'sp_5.png',

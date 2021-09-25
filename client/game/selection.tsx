@@ -1,15 +1,19 @@
 import type {Selection} from './types.ts'
 
-function isAlly(selection: Selection): boolean {
+export function isAlly(selection: Selection): boolean {
   return selection.target === 'ally'
 }
 
-function isHand(selection: Selection): boolean {
+export function isHand(selection: Selection): boolean {
   return selection.type === 'hand'
 }
 
-function isBoard(selection: Selection): boolean {
+export function isBoard(selection: Selection): boolean {
   return selection.type === 'board'
+}
+
+export function isDrawSelection(selection: Selection): boolean {
+  return selection.type === 'draws'
 }
 
 export function isPlayCardSelection(first: Selection, second: Selection): boolean {

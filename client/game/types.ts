@@ -11,10 +11,10 @@ export type AsyncHandle<T> =
 export type CardKey = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
 export interface Card {
-	type: number
+	type: CardKey | -1
 	basePower: number
 	power: number
-	id: CardKey
+	id: string
 	counters: number
 	owner: number
 	position: number
@@ -36,6 +36,7 @@ export interface Player {
 	life: number
 	ready: boolean
 }
+export type Team = 1 | 2
 
 interface TeamEnumMap {
   1: 'sentinal'
@@ -55,8 +56,10 @@ interface GameStatusMap {
 export interface GameState {
 	board: Board
 	player: Player
-	deck: Card[]
-  team: 1 | 2
+	deck: {
+    cards: Card[]
+  }
+  team: Team
 	enemyLife: number
 	enemyDeckSize: number
 	enemyHandSize: number
@@ -64,11 +67,14 @@ export interface GameState {
 	canDraw: boolean
 	hasDrawn: boolean
 	gameStatus: keyof GameStatusMap
+  drawChoices: Card[]
 }
 
 export type GameAction =
-  | { type: 'set-player'; team: 1 | 2}
-  | { type: 'update-state'; state: Omit<GameState, 'team'>}
+  | { type: 'set-player-team'; team: Team}
+  | { type: 'receive-cards'; cards: Card[]}
+  | { type: 'update-state'; state: Omit<GameState, 'team'> }
+  | { type: 'play-card', handIndex: number }
 
 export interface GameCommandAPI {
   readyPlayer: () => void
@@ -106,13 +112,13 @@ export interface CommandVariantParamMap {
 }
 
 export interface GameCommand {
-  playerId: string
-  type: GameCommandEnum,
+  player_id: Team
+  type: GameCommandEnum
   cmd: string // "<Variant> <VariantParam1> <VariantParam2> ..."
 }
 
 type SelectionTarget = 'ally' | 'opponent'
-type SelectionType = 'hand' | 'board'
+type SelectionType = 'hand' | 'board' | 'draws'
 
 export interface Selection {
   target: SelectionTarget
