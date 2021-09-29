@@ -5,6 +5,66 @@ import { Router } from 'oak'
 
 // import App from '~/client/App.tsx'
 
+function indexOfAll(source: string, query: string): number[] {
+  let currentPosition = 0
+  const buffer: number[] = []
+  while (currentPosition !== -1) {
+    const lastPosition = currentPosition
+    currentPosition = source.indexOf(query, lastPosition + 1)
+    if (currentPosition !== -1) buffer.push(currentPosition)
+  }
+  // ensure it's sorted in case while loop betrays us
+  return buffer.sort()
+}
+
+interface ResolvedEnvVar {
+  callsiteBounds: [number, number]
+  varname: string
+  value?: string
+}
+
+const ENV_SEARCH_STRING = "Deno.env.get(\""
+const ENV_SEARCH_END_STRING = "\")"
+
+function resolveClientDenoEnvVars(source: string): string {
+  const startIndices = indexOfAll(source, ENV_SEARCH_STRING)
+  const resolved = startIndices.map((startIndex) => {
+    const endIndex = source.indexOf(ENV_SEARCH_END_STRING, startIndex)
+    const varname = source.slice(startIndex + ENV_SEARCH_STRING.length, endIndex)
+    const bounds = [startIndex, endIndex + ENV_SEARCH_END_STRING.length]
+    const value = Deno.env.get(varname)
+    return {
+      callsiteBounds: bounds,
+      varname,
+      value: `"${value}"`,
+    }
+  })
+
+  function replaceBounds(input: string, newText: string | undefined, start: number, end: number) {
+    return `${input.slice(0, start)}${newText}${input.slice(end)}`
+  }
+
+  // reassemble source code by reversing the order and replacing strings
+  const reassembledSource = resolved.reverse().reduce(
+    (currentSource, {callsiteBounds, value, varname}) => {
+      if (value === undefined)
+        throw new Error(`Deno env variable ${varname} found in client code but not provided to server.`)
+      return replaceBounds(currentSource, value, callsiteBounds[0], callsiteBounds[1])
+    },
+    source,
+  )
+  return reassembledSource
+}
+
+function mapDict<T, U>(
+  dict: Record<string, T>,
+  fn: (entry: [string, T], index: number) => [string, U],
+): Record<string, U> {
+  return Object.fromEntries(
+    Object.entries(dict).map(fn)
+  )
+}
+
 async function createClientBundle() {
   const {files} = await Deno.emit('server/client.tsx', {
     bundle: 'module',
@@ -16,7 +76,15 @@ async function createClientBundle() {
       strictPropertyInitialization: false,
     },
   })
-  return files
+  const bundle = mapDict(files, ([path, source], i) => {
+    const resolved = resolveClientDenoEnvVars(source)
+    if (Deno.env.get("DEBUG")) {
+      Deno.writeTextFileSync(`debug/output${i}.js`, source)
+      Deno.writeTextFileSync(`debug/resolved${i}.js`, resolved)
+    }
+    return [path, resolved]
+  })
+  return bundle
 }
 
 const bundle = await createClientBundle()

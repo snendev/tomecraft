@@ -3,9 +3,9 @@ import useWebSocket from 'react-use-websocket'
 
 import assertNever from '~/common/assertNever.ts'
 
-import { useUser } from '../user.tsx'
-
 import { AsyncHandle, GameCommand, GameAction } from './types.ts'
+
+const WS_URL = Deno.env.get("WS_URL")
 
 const MY_ID = (function(){
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -81,10 +81,9 @@ interface SocketHandle {
 export default function useServerSocket(
   onUpdate: (action: GameAction) => void
 ): AsyncHandle<SocketHandle> {
-  const profile = useUser()
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
-  // prep socket
+  /* prep socket */
 
   const onMessage = React.useCallback((message: WebSocketEventMap['message']) => {
     const data = JSON.parse(message.data)
@@ -157,13 +156,8 @@ export default function useServerSocket(
     dispatch({type: 'close'})
   }, [])
 
-  const url = React.useMemo(
-    () => `ws://localhost:7636/ws`,
-    [profile],
-  )
-
   const {sendJsonMessage} = useWebSocket(
-    url,
+    WS_URL,
     {onMessage, onOpen, onError, onClose, shouldReconnect},
   )
 
@@ -182,7 +176,7 @@ export default function useServerSocket(
     })
   }, [state, sendJson])
 
-  // effects to push the coordinator along
+  /* effects to push the coordinator along */
 
   React.useEffect(() => {
     if (state.status !== 'finding-game') return
@@ -194,7 +188,7 @@ export default function useServerSocket(
     sendJson({command: 'join', player_id: state.playerId, match_id: state.matchId})
   }, [sendJson, state])
 
-  // return game command handler in wrapper
+  /* return game command handler in wrapper */
 
   const handle = React.useMemo<AsyncHandle<SocketHandle>>(() => {
     switch (state.status) {
