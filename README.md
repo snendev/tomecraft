@@ -1,4 +1,4 @@
-# Tomecraft
+# Tomecraft Web
 
 This is a client for a tactical card game server. It is made using [my Deno-React-Web-Starter template repository](https://github.com/sullivansean27/deno-react-web-starter).
 
