@@ -183,6 +183,12 @@ h2 {
   align-items: center;
 }
 
+.draw-choices {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .hand {
   display: flex;
   justify-content: center;
