@@ -19,7 +19,7 @@ export default function BoardSlot(props: CardTokenProps): JSX.Element {
     return (
       <button
         type="button"
-        className={`board-slot${isSelected ? ' selected' : ''}`}
+        className={`board-card${isSelected ? ' selected' : ''}`}
         onClick={onSelect}
         disabled={disabled}
       >
@@ -28,11 +28,14 @@ export default function BoardSlot(props: CardTokenProps): JSX.Element {
     )
   }
   return (
-    <CardToken
-      onSelect={onSelect}
-      cardKey={card.type}
-      isSelected={isSelected}
-      disabled={disabled}
-    />
+    <div className="board-slot">
+      <CardToken
+        cardKey={card.type}
+        onSelect={onSelect}
+        isSelected={isSelected}
+        disabled={disabled}
+      />
+      <span>{card.power}</span>
+    </div>
   )
 }

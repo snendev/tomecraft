@@ -196,6 +196,12 @@ h2 {
 }
 
 .board-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board-card {
   width: 5em;
   height: 7em;
   margin: 0 1em;

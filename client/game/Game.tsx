@@ -14,6 +14,9 @@ import {
 
 type GameProps = GameHandle
 
+const GAME_STATUS_SENTINAL_WIN = 4
+const GAME_STATUS_SCOURGE_WIN = 5
+
 export default function Game(props: GameProps): JSX.Element {
   const {
     team,
@@ -64,6 +67,13 @@ export default function Game(props: GameProps): JSX.Element {
   const allyBoard = team === 1 ? board.sentinal : board.scourge
   const isMyTurn = currentTurn === team
 
+  const maybeIsGameWinner =
+    gameStatus === GAME_STATUS_SCOURGE_WIN || gameStatus === GAME_STATUS_SENTINAL_WIN ? (
+      team === 1
+        ? gameStatus === GAME_STATUS_SENTINAL_WIN
+        : gameStatus === GAME_STATUS_SCOURGE_WIN
+    ) : null
+
   return (
     <div className="game-container">
       <div className="game-sidebar">
@@ -72,11 +82,17 @@ export default function Game(props: GameProps): JSX.Element {
           <p>Life: {enemyLife}</p>
           <p>Deck: {enemyDeckSize}</p>
         </div>
-        <div>
-          <p>{isMyTurn ? 'My' : 'Enemy'} Turn</p>
-          {isMyTurn && canDraw && <button type="button" onClick={startDraw}>Start Draw</button>}
-          {isMyTurn && hasDrawn && <button type="button" onClick={endTurn}>End Turn</button>}
-        </div>
+        {maybeIsGameWinner === null ? (
+          <div>
+            <p>{isMyTurn ? 'My' : 'Enemy'} Turn</p>
+            {isMyTurn && canDraw && <button type="button" onClick={startDraw}>Start Draw</button>}
+            {isMyTurn && hasDrawn && <button type="button" onClick={endTurn}>End Turn</button>}
+          </div>
+        ) : (
+          <div>
+            {maybeIsGameWinner ? "You Lose!" : "You Win!"}
+          </div>
+        )}
         <div className="player-info">
           <p>Life: {player.life}</p>
           <p>Deck: {deckSize}</p>
