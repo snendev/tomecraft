@@ -84,19 +84,17 @@ const initialState: GameClientState = {
   },
 	player: {
     name: '',
-    id: 0,
+    id: -1,
     hand: [],
-    life: 0,
+    life: -1,
     ready: false,
   },
-	deck: {
-    cards: []
-  },
+	deckSize: 0,
   team: 1,
 	enemyLife: 0,
 	enemyDeckSize: 0,
 	enemyHandSize: 0,
-	currentTurn: 1,
+	currentTurn: 0,
 	canDraw: false,
 	hasDrawn: false,
 	gameStatus: 0,

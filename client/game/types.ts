@@ -56,9 +56,7 @@ interface GameStatusMap {
 export interface GameState {
 	board: Board
 	player: Player
-	deck: {
-    cards: Card[]
-  }
+	deckSize: number
   team: Team
 	enemyLife: number
 	enemyDeckSize: number

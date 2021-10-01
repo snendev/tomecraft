@@ -19,7 +19,7 @@ export default function Game(props: GameProps): JSX.Element {
     team,
     board,
     player,
-    deck,
+    deckSize,
     enemyLife,
     enemyDeckSize,
     enemyHandSize,
@@ -79,18 +79,24 @@ export default function Game(props: GameProps): JSX.Element {
         </div>
         <div className="player-info">
           <p>Life: {player.life}</p>
-          <p>Deck: {deck.cards.length}</p>
+          <p>Deck: {deckSize}</p>
         </div>
       </div>
       <div className="game-board">
         <div className="hand">
-          {Array(enemyHandSize).fill(null).map(() => (
-            <CardToken cardKey={null} isSelected={false} disabled />
+          {Array(enemyHandSize).fill(null).map((_, i) => (
+            <CardToken
+              key={`enemy-hand-${i}`}
+              cardKey={null}
+              isSelected={false}
+              disabled
+            />
           ))}
         </div>
         <div className="fighter-area enemy">
           {enemyBoard.map((card, index) => (
             <BoardSlot
+              key={`enemy-${index}`}
               card={card ?? null}
               onSelect={() => selectCard({target: 'opponent', type: 'board', index})}
               isSelected={
@@ -105,6 +111,7 @@ export default function Game(props: GameProps): JSX.Element {
         <div className="fighter-area ally">
           {allyBoard.map((card, index) => (
             <BoardSlot
+              key={`ally-${index}`}
               card={card ?? null}
               onSelect={() => selectCard({target: 'ally', type: 'board', index})}
               isSelected={
@@ -121,6 +128,7 @@ export default function Game(props: GameProps): JSX.Element {
             <div className="draw-choices">
               {drawChoices.map((card, index) => (
                 <CardToken
+                  key={`draw-choices-${index}`}
                   cardKey={card.type === -1 ? null : card.type}
                   onSelect={() => selectCard({target: 'ally', type: 'draws', index})}
                   isSelected={
@@ -148,6 +156,7 @@ export default function Game(props: GameProps): JSX.Element {
         <div className="hand">
           {player.hand.map((card, index) => (
             <CardToken
+              key={`hand-${index}`}
               cardKey={card.type === -1 ? null : card.type}
               onSelect={() => selectCard({target: 'ally', type: 'hand', index})}
               isSelected={

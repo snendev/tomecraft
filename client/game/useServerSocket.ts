@@ -164,7 +164,7 @@ export default function useServerSocket(
               state: {
                 board: result.board,
                 player: result.player,
-                deck: result.deck,
+                deckSize: result.deck_size,
                 enemyLife: result.enemy_life,
                 enemyDeckSize: result.enemy_deck_size,
                 enemyHandSize: result.enemy_hand_size,
