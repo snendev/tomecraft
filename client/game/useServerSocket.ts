@@ -27,6 +27,7 @@ interface SessionCommandAPI {
   leave: () => void
   play: () => void
   poll: () => void
+  ready: () => void
 }
 
 interface SocketMessage {
@@ -43,6 +44,7 @@ type GameSocketSessionState =
   | { status: 'connecting' }
   | { status: 'finding-game' }
   | { status: 'joining-game'; playerId: string; matchId: string }
+  | { status: 'pre-game'; playerId: string; matchId: string }
   | { status: 'in-game'; playerId: string; matchId: string }
 
 type Action =
@@ -50,6 +52,7 @@ type Action =
   | { type: 'close' }
   | { type: 'find-game'; playerId: string; matchId: string }
   | { type: 'join-game' }
+  | { type: 'ready-game' }
 
 function reducer(state: GameSocketSessionState, action: Action): GameSocketSessionState {
   switch (action.type) {
@@ -63,6 +66,10 @@ function reducer(state: GameSocketSessionState, action: Action): GameSocketSessi
     }
     case 'join-game': {
       if (state.status !== 'joining-game') return state
+      return { ...state, status: 'pre-game' }
+    }
+    case 'ready-game': {
+      if (state.status !== 'pre-game') return state
       return { ...state, status: 'in-game' }
     }
     case 'close': {
@@ -74,8 +81,38 @@ function reducer(state: GameSocketSessionState, action: Action): GameSocketSessi
 
 const initialState: GameSocketSessionState = {status: 'connecting'}
 
+type ServerResult =
+  // session command result
+  | 'found'
+  | 'joined p1'
+  | 'joined p2'
+  | 'left'
+  | 'played'
+  | 'game ready'
+  | 'generic error'
+  // poll command result
+  | 'Scourge joined'
+  | 'Scourge turn'
+  | 'Scourge wins'
+  | 'Scourge player is ready'
+  | 'Scourge player has left'
+  | 'Sentinal joined'
+  | 'Sentinal turn'
+  | 'Sentinal wins'
+  | 'Sentinal player is ready'
+  | 'Sentinal player has left'
+  | 'update'
+
+interface ServerResponse {
+  player_id: string
+  match_id: string
+  result: ServerResult
+  game_result: any
+}
+
 interface SocketHandle {
   sendGameCommand: (command: GameCommand) => void
+  sendPoll: () => void
 }
 
 export default function useServerSocket(
@@ -86,7 +123,7 @@ export default function useServerSocket(
   /* prep socket */
 
   const onMessage = React.useCallback((message: WebSocketEventMap['message']) => {
-    const data = JSON.parse(message.data)
+    const data = JSON.parse(message.data) as ServerResponse
     switch (data.result) {
       case 'found': {
         dispatch({
@@ -104,6 +141,10 @@ export default function useServerSocket(
       case 'joined p2': {
         onUpdate({ type: 'set-player-team', team: 2 })
         dispatch ({ type: 'join-game' })
+        return
+      }
+      case 'game ready': {
+        dispatch({ type: 'ready-game' })
         return
       }
       case 'played': {
@@ -138,6 +179,10 @@ export default function useServerSocket(
           default: return
         }
       }
+      case 'update': {
+        console.log(message)
+        return;
+      }
       default: return;
     }
   }, [onUpdate])
@@ -169,12 +214,21 @@ export default function useServerSocket(
   const sendGameCommand = React.useCallback((gameCommand: GameCommand) => {
     if (state.status !== 'in-game') return
     sendJson({
-      player_id: MY_ID,
+      player_id: state.playerId,
       match_id: state.matchId,
       command: 'play',
       game_command: gameCommand,
     })
   }, [state, sendJson])
+
+  const sendPoll = React.useCallback(() => {
+    if (state.status !== 'in-game') return
+    sendJson({
+      player_id: state.playerId,
+      match_id: state.matchId,
+      command: 'poll',
+    })
+  }, [sendJson, state])
 
   /* effects to push the coordinator along */
 
@@ -188,15 +242,32 @@ export default function useServerSocket(
     sendJson({command: 'join', player_id: state.playerId, match_id: state.matchId})
   }, [sendJson, state])
 
+  React.useEffect(() => {
+    if (state.status !== 'pre-game') return
+    sendJson({command: 'ready', player_id: state.playerId, match_id: state.matchId})
+  }, [sendJson, state])
+
+  React.useEffect(() => {
+    if (state.status !== 'in-game') return
+    const leaveGame = () => {
+      sendJson({command: 'leave', player_id: state.playerId, match_id: state.matchId})
+    }
+    addEventListener('beforeunload', leaveGame)
+    return () => {
+      removeEventListener('beforeunload', leaveGame)
+    }
+  }, [sendJson, state])
+
   /* return game command handler in wrapper */
 
   const handle = React.useMemo<AsyncHandle<SocketHandle>>(() => {
     switch (state.status) {
       case 'in-game': {
-        return {status: 'connected', handle: {sendGameCommand}}
+        return {status: 'connected', handle: {sendGameCommand, sendPoll}}
       }
       case 'finding-game':
-      case 'joining-game': {
+      case 'joining-game':
+      case 'pre-game': {
         return {status: 'connecting'}
       }
       case 'connecting':

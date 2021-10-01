@@ -202,6 +202,16 @@ export default function GameClient(): JSX.Element {
 
   React.useEffect(() => {
     if (gameHandle.status !== 'connected') return
+    const intervalId = setInterval(() => {
+      gameHandle.handle.getView()
+    }, 1000)
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [gameHandle])
+
+  React.useEffect(() => {
+    if (gameHandle.status !== 'connected') return
     gameHandle.handle.readyPlayer()
     gameHandle.handle.readyPlayer()
   }, [gameHandle, team])

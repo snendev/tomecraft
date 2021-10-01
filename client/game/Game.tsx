@@ -60,18 +60,6 @@ export default function Game(props: GameProps): JSX.Element {
     }
   }, [currentTurn, startTurn])
 
-  React.useEffect(() => {
-    const intervalId = setInterval(
-      () => {
-        getView()
-      },
-      1000,
-    )
-    return () => {
-      clearInterval(intervalId)
-    }
-  }, [getView])
-
   const enemyBoard = team === 1 ? board.scourge : board.sentinal
   const allyBoard = team === 1 ? board.sentinal : board.scourge
   const isMyTurn = currentTurn === team
