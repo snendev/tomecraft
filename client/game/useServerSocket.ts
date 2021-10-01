@@ -180,7 +180,7 @@ export default function useServerSocket(
         }
       }
       case 'update': {
-        console.log(message)
+        // console.log(message)
         return;
       }
       default: return;
