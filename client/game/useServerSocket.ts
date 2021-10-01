@@ -244,7 +244,12 @@ export default function useServerSocket(
 
   React.useEffect(() => {
     if (state.status !== 'pre-game') return
-    sendJson({command: 'ready', player_id: state.playerId, match_id: state.matchId})
+    const intervalId = setInterval(() => {
+      sendJson({command: 'ready', player_id: state.playerId, match_id: state.matchId})
+    }, 200)
+    return () => {
+      clearInterval(intervalId)
+    }
   }, [sendJson, state])
 
   React.useEffect(() => {
