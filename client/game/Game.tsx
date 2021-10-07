@@ -90,7 +90,7 @@ export default function Game(props: GameProps): JSX.Element {
           </div>
         ) : (
           <div>
-            {maybeIsGameWinner ? "You Lose!" : "You Win!"}
+            {maybeIsGameWinner ? "You Win!" : "You Lose!"}
           </div>
         )}
         <div className="player-info">
