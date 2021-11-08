@@ -1,7 +1,14 @@
-import firebase from 'firebase'
-import 'firebase/auth'
+import {initializeApp} from 'firebase/app'
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth'
 
-const app = firebase.initializeApp({
+const app = initializeApp({
   apiKey: "AIzaSyBICkyQIt-9lTsxHvRS1MOlZ-UdFVj8rsA",
   authDomain: "tomecraft-87ce5.firebaseapp.com",
   projectId: "tomecraft-87ce5",
@@ -10,11 +17,11 @@ const app = firebase.initializeApp({
   appId: "1:1021868917316:web:6c58534dd0ed491beab211",
 })
 
-const auth = app.auth()
+const auth = getAuth(app)
 
 // auto-login
 export function subscribeToAuthState(handleUser: (user: {uid: string; displayName: string} | null) => void) {
-  return auth.onAuthStateChanged(handleUser)
+  return onAuthStateChanged(auth, handleUser)
 }
 
 ///
@@ -22,11 +29,11 @@ export function subscribeToAuthState(handleUser: (user: {uid: string; displayNam
 ///
 
 export async function registerBasic(email: string, password: string) {
-  const user = await auth.createUserWithEmailAndPassword(email, password)
+  const user = await createUserWithEmailAndPassword(auth, email, password)
 }
 
 export async function loginBasic(email: string, password: string): Promise<string | null> {
-  const credentials = await auth.signInWithEmailAndPassword(email, password)
+  const credentials = await signInWithEmailAndPassword(auth, email, password)
   return credentials.user?.uid ?? null
 }
 
@@ -36,7 +43,7 @@ export async function loginBasic(email: string, password: string): Promise<strin
 
 export async function loginGoogle(): Promise<string> {
   // @ts-ignore deno does not recognize firebase.auth the way it is imported, but it exists
-  const provider = new firebase.auth.GoogleAuthProvider();
-  const {accessToken, credential, user} = await auth.signInWithPopup(provider)
+  const provider = new GoogleAuthProvider(auth);
+  const {accessToken, credential, user} = await signInWithPopup(auth, provider)
   return user.uid
 }
