@@ -14,7 +14,7 @@ export default function Page({children}: PageProps): JSX.Element {
           Tomecraft
         </h2>
         <a
-          href="https://github.com/sullivansean27/deno-react-web-starter"
+          href="https://github.com/snendev/deno-react-web-starter"
           target="_blank"
         >
           <GithubIcon size={60} />

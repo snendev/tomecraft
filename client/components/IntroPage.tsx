@@ -18,7 +18,7 @@ export default function Page({children}: PageProps): JSX.Element {
               Tomecraft
             </h1>
             <a
-              href="https://github.com/sullivansean27/tomecraft"
+              href="https://github.com/snendev/tomecraft"
               target="_blank"
             >
               <GithubIcon size={80} />
