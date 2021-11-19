@@ -2,8 +2,7 @@ import React from 'react'
 
 import type {Card} from './types.ts'
 import CardToken from './cards/Card.tsx'
-
-const EMPTY_SPACE = '-'
+import {EMPTY_SPACE, EMPTY_VALUE} from './cards/constants.ts'
 
 interface CardTokenProps {
   card: Card | null
@@ -15,7 +14,7 @@ interface CardTokenProps {
 export default function BoardSlot(props: CardTokenProps): JSX.Element {
   const {onSelect, card, isSelected, disabled} = props
 
-  if (card === null || card.type === -1) {
+  if (card === null || card.type === EMPTY_VALUE) {
     return (
       <button
         type="button"
@@ -30,7 +29,7 @@ export default function BoardSlot(props: CardTokenProps): JSX.Element {
   return (
     <div className="board-slot">
       <CardToken
-        cardKey={card.type}
+        card={card}
         onSelect={onSelect}
         isSelected={isSelected}
         disabled={disabled}

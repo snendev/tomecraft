@@ -8,11 +8,11 @@ export type AsyncHandle<T> =
   | { status: 'connecting' }
   | { status: 'connected'; handle: T}
 
-export type CardKey = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+export type CardKey = string
 
 export interface Card {
-	type: CardKey | -1
-	basePower: number
+	type: CardKey | 'EmptyValue'
+	base_power: number
 	power: number
 	id: string
 	counters: number

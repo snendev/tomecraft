@@ -237,3 +237,18 @@ h2 {
   width: 100%;
   height: 100%;
 }
+
+.card-token {
+  width: 100%;
+  height: 100%;
+
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-token.disabled {
+  background-color: grey;
+}

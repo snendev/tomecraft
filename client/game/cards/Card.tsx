@@ -1,21 +1,19 @@
 import React from 'react'
 
-import type {CardKey} from '../types.ts'
+import type {Card} from '../types.ts'
 
-import {getCardAlt, getCardSrc} from './cards.ts'
-
-const EMPTY_SPACE = '-'
+import {EMPTY_SPACE, EMPTY_VALUE} from './constants.ts'
 
 interface CardTokenProps {
-  cardKey: CardKey | null
+  card: Card | null
   onSelect?: () => void
   isSelected: boolean
   disabled: boolean
 }
 
 export default function CardToken(props: CardTokenProps): JSX.Element {
-  const {onSelect, cardKey, isSelected, disabled} = props
-  if (cardKey == null) {
+  const {onSelect, card, isSelected, disabled} = props
+  if (card === null || card.type == EMPTY_VALUE) {
     return (
       <div className={`card-button card-back${isSelected ? ' selected' : ''}`}>
         <div>
@@ -31,11 +29,14 @@ export default function CardToken(props: CardTokenProps): JSX.Element {
       onClick={onSelect}
       disabled={disabled}
     >
-      <img
-        className="card-image"
-        src={getCardSrc(cardKey)}
-        alt={getCardAlt(cardKey)}
-      />
+      <div className={`card-token${disabled ? ' disabled' : ''}`}>
+        <div>
+          {card.type}
+        </div>
+        <div>
+          {card.base_power}
+        </div>
+      </div>
     </button>
   )
 }

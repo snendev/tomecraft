@@ -103,7 +103,7 @@ export default function Game(props: GameProps): JSX.Element {
           {Array(enemyHandSize).fill(null).map((_, i) => (
             <CardToken
               key={`enemy-hand-${i}`}
-              cardKey={null}
+              card={null}
               isSelected={false}
               disabled
             />
@@ -145,7 +145,7 @@ export default function Game(props: GameProps): JSX.Element {
               {drawChoices.map((card, index) => (
                 <CardToken
                   key={`draw-choices-${index}`}
-                  cardKey={card.type === -1 ? null : card.type}
+                  card={card}
                   onSelect={() => selectCard({target: 'ally', type: 'draws', index})}
                   isSelected={
                     selection
@@ -173,7 +173,7 @@ export default function Game(props: GameProps): JSX.Element {
           {player.hand.map((card, index) => (
             <CardToken
               key={`hand-${index}`}
-              cardKey={card.type === -1 ? null : card.type}
+              card={card}
               onSelect={() => selectCard({target: 'ally', type: 'hand', index})}
               isSelected={
                 selection
