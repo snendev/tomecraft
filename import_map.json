@@ -2,7 +2,7 @@
   "imports": {
     "~/": "./",
 
-    "firebase/": "https://cdn.skypack.dev/firebase@9.5.0/",
+    "firebase/": "https://cdn.skypack.dev/firebase/",
     "http": "https://deno.land/std@0.105.0/http/mod.ts",
     "media-types": "https://deno.land/x/media_types@v2.10.0/mod.ts",
     "oak": "https://deno.land/x/oak@v9.0.1/mod.ts",
